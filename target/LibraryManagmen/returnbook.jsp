@@ -21,22 +21,18 @@
             <td>Book Quantity</td>
         </tr>
         <tr>
-            <td>${uid}</td>
-            <td>${bookid}</td>
-            <td>${bookname}</td>
-            <td>${bookquantity}</td>
-            <input type="hidden" value="${bookid}" name="bookid">
+                <td>${uid}</td>
+                 <td>${bookid}</td>
+                <td>${bookname}</td>
+                <td>${bookquantity}</td>
+                <input type="hidden" value="${bookid}" name="bookid">
             <input type="hidden" name="uid" value="${uid}">
             <input type="hidden" name="dbbookquantity" value="${bookquantity}">
         </tr>
 
-        <tr>
-            <td>Enter The Quantity You want To return</td>
-            <td><input type="text" name="bookquantity"></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Submit"></td>
-        </tr>
+        <tr><td>Enter The Quantity You want To return</td>
+            <td><input type="text" name="bookquantity"></td></tr>
+        <tr><td><input type="submit" value="Submit" > </td></tr>
     </table>
 </form>
 </body>

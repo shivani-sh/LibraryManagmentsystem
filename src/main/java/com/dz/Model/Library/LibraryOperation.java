@@ -1,7 +1,5 @@
 package com.dz.Model.Library;
-
 import org.apache.log4j.Logger;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,7 +32,6 @@ public class LibraryOperation {
             String usernameDB = "";
             String userpassword = "";
             String roleDB = "";
-            System.out.println("user login");
             String query1 = "select max(uid) from logindata";
             PreparedStatement preparedStatement1 = connection.prepareStatement(query1);
             ResultSet resultSet = preparedStatement1.executeQuery();
@@ -56,12 +53,9 @@ public class LibraryOperation {
                 roleDB = resultSet.getString("role");
                 if (username.equals(usernameDB) && password.equals(userpassword) && roleDB.equals("Admin"))
                     return "Admin_Role";
-
                 if (username.equals(usernameDB) && password.equals(userpassword) && roleDB.equals("User"))
                     return "User_Role";
-                System.out.println("user login");
             }
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -80,14 +74,9 @@ public class LibraryOperation {
         connection = dBconfig.getconnection();
         System.out.println("aa gya");
         try {
-
-            String data = "insert into registration  values(?,?,?,?,?,?)";
-
+            String data = "insert into logindata  values(?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(data);
-
             int id = maxId();
-
-
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, library.getFirstname());
             preparedStatement.setString(3, library.getLastname());
@@ -95,8 +84,6 @@ public class LibraryOperation {
             preparedStatement.setString(5, library.getEmail());
             preparedStatement.setString(6, library.getPassword());
             preparedStatement.execute();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,13 +112,18 @@ public class LibraryOperation {
             preparedStatement.setInt(4, library.getBook_quantity());
             preparedStatement.execute();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * here we delete data
+     *
+     * @param id
+     * @return
+     */
 
     public int deletedata(int id) {
 
@@ -148,7 +140,12 @@ public class LibraryOperation {
         return id;
     }
 
-
+    /**
+     * here we found max id
+     *
+     * @return
+     * @throws SQLException
+     */
     public int maxId() throws SQLException {
         dBconfig = new DBconfig();
         connection = dBconfig.getconnection();
@@ -162,6 +159,12 @@ public class LibraryOperation {
         return id;
     }
 
+    /**
+     * here we find book max id
+     *
+     * @return
+     * @throws SQLException
+     */
     public int bookmaxId() throws SQLException {
         dBconfig = new DBconfig();
         connection = dBconfig.getconnection();
@@ -174,6 +177,11 @@ public class LibraryOperation {
         return id;
     }
 
+    /**
+     * here we display book record
+     *
+     * @return
+     */
     public List<Library> display() {
 
         List<Library> libraryList = new ArrayList<>();
@@ -223,6 +231,12 @@ public class LibraryOperation {
         return null;
     }
 
+    /**
+     * we get book by id
+     *
+     * @param id
+     * @return book id
+     */
     public List<Library> getbookbyid(int id) {
         dBconfig = new DBconfig();
         try {
@@ -238,7 +252,7 @@ public class LibraryOperation {
                 library.setBookName(rs.getString(2));
                 ;
                 library.setBook_quantity(rs.getInt(3));
-                System.out.println(library.getBookName() + "  " + library.getBookid() + "the message form dao" + library.getBook_quantity());
+                logger.info(library.getBookName() + "  " + library.getBookid() + "the message form dao" + library.getBook_quantity());
                 libraryList.add(library);
             }
             return libraryList;
@@ -248,6 +262,13 @@ public class LibraryOperation {
         return null;
     }
 
+    /**
+     * here we update book quantity
+     *
+     * @param issuebookquantity
+     * @param id
+     * @param uid
+     */
     public void updatebookquantity(int issuebookquantity, int id, int uid) {
         dBconfig = new DBconfig();
         String dbbookname = "";
@@ -265,38 +286,42 @@ public class LibraryOperation {
             preparedStatement1.setInt(2, id);
             preparedStatement1.execute();
 
-            System.out.println("try to insert in issued book");
             PreparedStatement preparedStatementIssuedeBookData = dBconfig.getconnection().prepareStatement("select * from issuedbook");
-
+            int found = 0;
+            int foundbook = 0;
+            int qunt = 0;
             ResultSet resultSet1 = preparedStatementIssuedeBookData.executeQuery();
             if (resultSet1.next()) {
                 ResultSet resultSetIssuedBook = preparedStatementIssuedeBookData.executeQuery();
                 while (resultSetIssuedBook.next()) {
-                    System.out.println("in while loop issued book");
-                    if (resultSetIssuedBook.getInt(1) != id && resultSetIssuedBook.getInt("user_id") != uid) {
-                        System.out.println("in else  loop issued book");
-                        String date = date();
-                        PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("insert into issuedbook values(?,?,?,?,?)");
-                        preparedStatement2.setInt(1, id);
-                        preparedStatement2.setString(2, dbbookname);
-                        preparedStatement2.setInt(3, issuebookquantity);
-                        preparedStatement2.setInt(4, uid);
-                        preparedStatement2.setString(5, date);
-                        preparedStatement2.execute();
-
-                    } else {
-
-                        int qunt = resultSetIssuedBook.getInt(3);
-                        qunt = qunt + issuebookquantity;
-                        PreparedStatement preparedStatement3 = dBconfig.getconnection().prepareStatement("update issuedbook set book_quantity=? where user_id=? AND book_id=?");
-                        preparedStatement3.setInt(1, qunt);
-                        preparedStatement3.setInt(2, uid);
-                        preparedStatement3.setInt(3, id);
-                        preparedStatement3.execute();
+                    if (resultSetIssuedBook.getInt(1) != id && resultSetIssuedBook.getInt("user_id") == uid) {
+                        found = 1;
+                    }
+                    if (resultSetIssuedBook.getInt(1) == id && resultSetIssuedBook.getInt("user_id") == uid) {
+                        foundbook = 1;
+                        resultSetIssuedBook.getInt(3);
                     }
                 }
+                qunt = qunt + issuebookquantity;
+                if (found == 1) {
+                    String date = date();
+                    PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("insert into issuedbook values(?,?,?,?,?)");
+                    preparedStatement2.setInt(1, id);
+                    preparedStatement2.setString(2, dbbookname);
+                    preparedStatement2.setInt(3, issuebookquantity);
+                    preparedStatement2.setInt(4, uid);
+                    preparedStatement2.setString(5, date);
+                    preparedStatement2.execute();
+
+                } else if (foundbook == 1) {
+                    PreparedStatement preparedStatement3 = dBconfig.getconnection().prepareStatement("update issuedbook set book_quantity=? where user_id=? AND book_id=?");
+                    preparedStatement3.setInt(1, qunt);
+                    preparedStatement3.setInt(2, uid);
+                    preparedStatement3.setInt(3, id);
+                    preparedStatement3.execute();
+                }
             } else {
-                System.out.println("always new insert");
+                logger.info("always new insert");
                 String date = date();
                 PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("insert into issuedbook values(?,?,?,?,?)");
                 preparedStatement2.setInt(1, id);
@@ -307,19 +332,20 @@ public class LibraryOperation {
                 preparedStatement2.execute();
 
             }
-           /* PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("update logindata set book_name=?,book_issuedate=?,book_quantity=?,book_id=? where uid=?");
-
-            preparedStatement2.setString(1, dbbookname);
-            preparedStatement2.setString(2, issuedate);
-            preparedStatement2.setInt(3, issuebookquantity);
-            preparedStatement2.setInt(4, id);
-            preparedStatement2.setInt(5, uid);
-            preparedStatement2.execute();*/
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * return  book quantity
+     *
+     * @param uid
+     * @param bookid
+     * @param dbbookquantity
+     * @param bookquantity
+     * @throws SQLException
+     */
     public void returnbookquantity(int uid, int bookid, int dbbookquantity, int bookquantity) throws SQLException {
         dBconfig = new DBconfig();
         dbbookquantity = dbbookquantity - bookquantity;
@@ -342,16 +368,20 @@ public class LibraryOperation {
         preparedStatement2.execute();
     }
 
-
+    /**
+     * IN this we get book id
+     *
+     * @param uid
+     * @return book id
+     */
     public List<User> getbookbyuserid(int uid) {
         dBconfig = new DBconfig();
+        List<User> libraryList = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = dBconfig.getconnection().prepareStatement("select * from issuedbook where user_id=?");
             preparedStatement.setInt(1, uid);
             ResultSet rs = preparedStatement.executeQuery();
 
-
-            List<User> libraryList = new ArrayList<>();
             while (rs.next()) {
                 User user = new User();
                 user.setUid(rs.getInt(4));
@@ -361,17 +391,18 @@ public class LibraryOperation {
                 user.setIssue_date(rs.getString(5));
                 libraryList.add(user);
             }
-            for (User user : libraryList) {
-                System.out.println(user.getUsername() + " " + user.getUid() + " " + user.getQuantity() + " " + user.getIssue_date());
-            }
-            return libraryList;
+
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
         }
-        return null;
+        return libraryList;
     }
 
-
+    /**
+     * here we take date to issue and return book
+     *
+     * @return
+     */
     public String date() {
         Calendar calendar = new GregorianCalendar();
         int year = calendar.get(Calendar.YEAR);
@@ -381,6 +412,21 @@ public class LibraryOperation {
         return year + "-" + month + "-" + day;
     }
 
+
+    public void userdatainsert(User user) {
+        dBconfig = new DBconfig();
+        try {
+            int id=maxId();
+            PreparedStatement preparedStatement = dBconfig.getconnection().prepareStatement("insert into logindata(uid,username,userpass) values(?,?,?)");
+           preparedStatement.setInt(1,id);
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 
 

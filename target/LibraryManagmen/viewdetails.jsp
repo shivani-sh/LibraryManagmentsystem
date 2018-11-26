@@ -33,9 +33,7 @@
                 <td><c:out value="${list.bookName}"></c:out> &nbsp;&nbsp;</td>
                 <td><c:out value="${list.quantity}"></c:out> &nbsp;&nbsp;</td>
                 <td><c:out value="${list.issue_date}"></c:out> &nbsp;&nbsp;</td>
-                <td>
-                    <a href="<c:url value="/ReturnBook?uid=" /><c:out value="${list.uid}"/>&bookid=<c:out value="${list.bookid}"/>&bookquantity=<c:out value="${list.quantity}"/>&bookname=<c:out value="${list.bookName}"/>">Return
-                        Book</a></td>
+                <td><a href="<c:url value="/ReturnBook?uid=" /><c:out value="${list.uid}"/>&bookid=<c:out value="${list.bookid}"/>&bookquantity=<c:out value="${list.quantity}"/>&bookname=<c:out value="${list.bookName}"/>">Return Book</a> </td>
 
             </tr>
         </table>

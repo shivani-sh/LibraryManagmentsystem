@@ -3,12 +3,12 @@
 <html>
 <body>
 <form method="get" action="<c:url value="/login"/>">
-  <center>
+    <center>
         <select name="item">
             <option value="User">User</option>
             <option value="Admin">Admin</option>
         </select>
-  </center>
+    </center>
     <center>
         <table border="1" width="30%" cellpadding="3">
             <thead>
@@ -18,20 +18,18 @@
             </thead>
             <tbody>
 
-                <tr>
-                    <td>User Name</td>
-                    <td><input type="text" name="uname" value=""/></td>
-                </tr>
-                <tr>
-                    <td>Password</td>
-                    <td><input type="password" name="pass" value=""/></td>
-                <tr>
-                    <td><input type="submit" value="Login"/></td>
+            <tr>
+                <td>User Name</td>
+                <td><input type="text" name="uname" value=""/></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="pass" value=""/></td>
+            <tr>
+                <td><input type="submit" value="Login"/></td>
 
-                </tr>
-                </tr>
-
-
+            </tr>
+            </tr>
 
 
             </tbody>
@@ -40,12 +38,12 @@
 </form>
 <center>
     <form method="post" action="<c:url value="/login"/>">
-       <table><tr>
-           <td><input type="submit" name="registration" value="registration"></td>
-       </tr></table>
+        <table>
+            <tr>
+                <td><input type="submit" name="registration" value="registration"></td>
+            </tr>
+        </table>
     </form>
-
-
 
 
 </center>
