@@ -133,19 +133,19 @@ public class LibraryOperation {
     }
 
 
-    public int deletedata(int stu_id) {
+    public int deletedata(int id) {
 
         dBconfig = new DBconfig();
         connection = dBconfig.getconnection();
         try {
             Statement statement = connection.createStatement();
-            int count = statement.executeUpdate(String.format("DELETE FROM Librarydata where id=" + stu_id + ";"));
+            int count = statement.executeUpdate(String.format("DELETE FROM book where id=" + id + ";"));
             logger.info(count + " record deleted");
 
         } catch (SQLException e) {
 
         }
-        return stu_id;
+        return id;
     }
 
 
@@ -250,7 +250,7 @@ public class LibraryOperation {
 
     public void updatebookquantity(int issuebookquantity, int id, int uid) {
         dBconfig = new DBconfig();
-        String dbbookname="";
+        String dbbookname = "";
 
         try {
             PreparedStatement preparedStatement = dBconfig.getconnection().prepareStatement("select book_quantity,book_name from book where id=?");
@@ -268,8 +268,8 @@ public class LibraryOperation {
             System.out.println("try to insert in issued book");
             PreparedStatement preparedStatementIssuedeBookData = dBconfig.getconnection().prepareStatement("select * from issuedbook");
 
-            ResultSet resultSet1=preparedStatementIssuedeBookData.executeQuery();
-            if(resultSet1.next()){
+            ResultSet resultSet1 = preparedStatementIssuedeBookData.executeQuery();
+            if (resultSet1.next()) {
                 ResultSet resultSetIssuedBook = preparedStatementIssuedeBookData.executeQuery();
                 while (resultSetIssuedBook.next()) {
                     System.out.println("in while loop issued book");
@@ -295,16 +295,15 @@ public class LibraryOperation {
                         preparedStatement3.execute();
                     }
                 }
-            }
-            else {
+            } else {
                 System.out.println("always new insert");
-                String date=date();
+                String date = date();
                 PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("insert into issuedbook values(?,?,?,?,?)");
-                preparedStatement2.setInt(1,id);
-                preparedStatement2.setString(2,dbbookname);
-                preparedStatement2.setInt(3,issuebookquantity);
-                preparedStatement2.setInt(4,uid);
-                preparedStatement2.setString(5,date);
+                preparedStatement2.setInt(1, id);
+                preparedStatement2.setString(2, dbbookname);
+                preparedStatement2.setInt(3, issuebookquantity);
+                preparedStatement2.setInt(4, uid);
+                preparedStatement2.setString(5, date);
                 preparedStatement2.execute();
 
             }
@@ -321,26 +320,26 @@ public class LibraryOperation {
         }
     }
 
-    public void returnbookquantity(int uid, int bookid,int dbbookquantity,int bookquantity) throws SQLException {
+    public void returnbookquantity(int uid, int bookid, int dbbookquantity, int bookquantity) throws SQLException {
         dBconfig = new DBconfig();
-       dbbookquantity=dbbookquantity-bookquantity;
+        dbbookquantity = dbbookquantity - bookquantity;
         PreparedStatement preparedStatement = dBconfig.getconnection().prepareStatement("update issuedbook set book_quantity=? where book_id=? And user_id=?");
-       preparedStatement.setInt(1,dbbookquantity);
-       preparedStatement.setInt(2,bookid);
-       preparedStatement.setInt(3,uid);
-       preparedStatement.execute();
+        preparedStatement.setInt(1, dbbookquantity);
+        preparedStatement.setInt(2, bookid);
+        preparedStatement.setInt(3, uid);
+        preparedStatement.execute();
 
-       PreparedStatement preparedStatement1=dBconfig.getconnection().prepareStatement("select * from book where id=?");
-       preparedStatement1.setInt(1,bookid);
-       ResultSet resultSet=preparedStatement1.executeQuery();
-       resultSet.next();
-       int dbquantity=resultSet.getInt(4);
-       dbquantity=dbquantity+bookquantity;
+        PreparedStatement preparedStatement1 = dBconfig.getconnection().prepareStatement("select * from book where id=?");
+        preparedStatement1.setInt(1, bookid);
+        ResultSet resultSet = preparedStatement1.executeQuery();
+        resultSet.next();
+        int dbquantity = resultSet.getInt(4);
+        dbquantity = dbquantity + bookquantity;
 
-        PreparedStatement preparedStatement2=dBconfig.getconnection().prepareStatement("update book set book_quantity=? where id=?");
-   preparedStatement2.setInt(1,dbquantity);
-   preparedStatement2.setInt(2,bookid);
-   preparedStatement2.execute();
+        PreparedStatement preparedStatement2 = dBconfig.getconnection().prepareStatement("update book set book_quantity=? where id=?");
+        preparedStatement2.setInt(1, dbquantity);
+        preparedStatement2.setInt(2, bookid);
+        preparedStatement2.execute();
     }
 
 

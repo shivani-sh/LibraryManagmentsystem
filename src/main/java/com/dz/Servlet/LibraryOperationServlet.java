@@ -1,4 +1,5 @@
 package com.dz.Servlet;
+import com.dz.Model.Library.Library;
 import com.dz.Model.Library.LibraryOperation;
 
 import javax.servlet.RequestDispatcher;
@@ -8,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
+
 
 @WebServlet(name = "LibraryOperationServlet",urlPatterns = "/LibraryOperation")
 public class LibraryOperationServlet extends HttpServlet {
@@ -23,17 +24,17 @@ public class LibraryOperationServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             System.out.println(" add");
         }
-     if(request.getParameter("items").equals("DeleteBook"))
+     /*if(request.getParameter("items").equals("DeleteBook"))
      {
          RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/delete.jsp");
          requestDispatcher.forward(request, response);
 
      }
-     if(request.getParameter("items").equals("UpdateBook"))
+     if(request.getParameter("items").equals("View"))
      {
          RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/updatebook.jsp");
          requestDispatcher.forward(request, response);
-     }
+     }*/
 
 
 

@@ -21,7 +21,7 @@ public class ViewUserDetaislServlet extends HttpServlet {
         int uid= (int) session.getAttribute("id");
         LibraryOperation libraryOperation=new LibraryOperation();
         List<User> list =libraryOperation.getbookbyuserid(uid);
-request.setAttribute("list",list);
+        request.setAttribute("list",list);
         RequestDispatcher requestDispatcher=request.getRequestDispatcher("/viewdetails.jsp");
         requestDispatcher.forward(request,response);
     }
