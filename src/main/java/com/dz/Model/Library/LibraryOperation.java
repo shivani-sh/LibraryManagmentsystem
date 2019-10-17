@@ -14,7 +14,7 @@ public class LibraryOperation {
     private Connection connection;
     private Logger logger = Logger.getLogger(LibraryOperation.class.getName());
 
-    public String userlogin(Library library) throws NullPointerException {
+    public String userLogin(Library library) throws NullPointerException {
         dBconfig = new DBconfig();
         connection = dBconfig.getconnection();
 
